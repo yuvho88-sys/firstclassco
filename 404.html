@@ -32,7 +32,22 @@
       href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="/assets/index-DfmnRYB-.js"></script>
+
+    <!-- פיקסל מטא. נטען רק בדומיין החי ורק כשהוגדר מזהה.
+         להפעלה: להדביק את מזהה הפיקסל בין הגרשיים בשורה הבאה. -->
+    <script>
+      var META_PIXEL_ID = '556781136024041';
+      if (META_PIXEL_ID && location.hostname === 'ml.firstclassco.co.il') {
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', META_PIXEL_ID);
+        fbq('track', 'PageView');
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/index-UXlqa0Nk.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-aVDHWHj4.css">
   </head>
   <body>
