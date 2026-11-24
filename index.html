@@ -33,11 +33,14 @@
       rel="stylesheet"
     />
 
-    <!-- פיקסל מטא. נטען רק בדומיין החי ורק כשהוגדר מזהה.
-         להפעלה: להדביק את מזהה הפיקסל בין הגרשיים בשורה הבאה. -->
+    <!-- פיקסל מטא. נטען רק בדומיין החי, ורק אחרי שהגולש לחץ "מאשר/ת" בחלונית ההסכמה.
+         הבחירה נשמרת ב-localStorage במפתח fc_pixel_consent ("granted" או "denied").
+         החלונית עצמה ב-src/App.jsx (ConsentBanner), והיא קוראת ל-window.fcLoadPixel אחרי אישור. -->
     <script>
       var META_PIXEL_ID = '556781136024041';
-      if (META_PIXEL_ID && location.hostname === 'ml.firstclassco.co.il') {
+      window.fcLoadPixel = function () {
+        if (!META_PIXEL_ID || location.hostname !== 'ml.firstclassco.co.il') return;
+        if (window.fbq) return;
         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
         n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
@@ -45,10 +48,31 @@
         document,'script','https://connect.facebook.net/en_US/fbevents.js');
         fbq('init', META_PIXEL_ID);
         fbq('track', 'PageView');
+      };
+      window.fcPixelConsent = function () {
+        try { return localStorage.getItem('fc_pixel_consent'); } catch (e) { return null; }
+      };
+      // פיקסל שכבר רץ בדף לא ממשיך לשלוח אחרי ביטול: כשהבחירה משתנה בלשונית אחרת,
+      // או כשהדף חוזר מזיכרון הדפדפן (כפתור "אחורה") אחרי ביטול, הדף נטען מחדש בלי הפיקסל.
+      function fcRevokeAndReload() {
+        try { window.fbq('consent', 'revoke'); } catch (e) {}
+        location.reload();
       }
+      window.addEventListener('storage', function (e) {
+        if (e.key !== 'fc_pixel_consent') return;
+        if (e.newValue === 'granted') window.fcLoadPixel();
+        else if (window.fbq) fcRevokeAndReload();
+      });
+      window.addEventListener('pageshow', function (e) {
+        if (!e.persisted) return;
+        var c = window.fcPixelConsent();
+        if (c === 'granted') window.fcLoadPixel();
+        else if (window.fbq) fcRevokeAndReload();
+      });
+      if (window.fcPixelConsent() === 'granted') window.fcLoadPixel();
     </script>
-    <script type="module" crossorigin src="/assets/index-UXlqa0Nk.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-aVDHWHj4.css">
+    <script type="module" crossorigin src="/assets/index-BDXojdpe.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-FpH3x1KK.css">
   </head>
   <body>
     <div id="root"></div>
